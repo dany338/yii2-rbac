@@ -42,13 +42,15 @@ class Bootstrap implements BootstrapInterface
         if ($this->checkRbacModuleInstalled($app)) {
             $authManager = $app->get('authManager', false);
 
-            if (!$authManager) {
-                $app->set('authManager', [
-                    'class' => DbManager::className(),
-                ]);
-            } else if (!($authManager instanceof ManagerInterface)) {
-                throw new InvalidConfigException('You have wrong authManager configuration');
-            }
+            // if (!$authManager) {
+                if (!$this->checkAuthManagerConfigured($app)) {
+                    $app->set('authManager', [
+                        'class' => DbManager::className(),
+                    ]);
+                }
+            // } else if (!($authManager instanceof ManagerInterface)) {
+            //     throw new InvalidConfigException('You have wrong authManager configuration');
+            // }
 
             // if dektrium/user extension is installed, copy admin list from there
             if ($this->checkUserModuleInstalled($app) && $app instanceof WebApplication) {
